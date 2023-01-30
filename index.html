@@ -11,31 +11,36 @@
 </head>
 <body>
 
-<!-- зак -->
+
 <div id="app">
     <div class="product">
         <div class="product-image">
             <img :src="image" :alt="altText"/>
         </div>
         <div class="product-info">
-            <h1>{{ product }}</h1>
-            <p>{{ description }}</p>
-            <span v-if="onSale">onSale</span>
-            <span v-else>noSale</span>
-            <p v-if="inventory > 10">In stock</p>
-            <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
-            <p v-else>Out of stock</p>
+            <h1>{{ product }} </h1> <!-- загаловок -->
+            <p>{{ description }} <a :href="link">More products like this</a></p> <!-- Ссылка на магазин -->
+            <span v-if="onSale">onSale</span> <!-- товар находится на скидке -->
+            <span v-else>noSale</span> <!-- товар не находится на скидке -->
+            <p v-if="inventory > 10">In stock</p> <!-- товар нахдится в наличии -->
+            <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p> <!-- товар продали -->
+            <p v-else>Out of stock</p> <!-- товара нет в наличии -->
             <ul>
-                <li v-for="detail in details">{{ detail }}</li>
+                <li v-for="detail in details">{{ detail }}</li> <!-- состав -->
             </ul>
             <div v-for="variant in variants" :key="variant.variantId">
-                <p>{{ variant.variantColor }}</p>
+                <p @mouseover="updateProduct(variant.variantImage)">
+                    {{ variant.variantColor }}
+                </p>
             </div>
             <ul>
-                <li v-for="size in sizes">{{size}}</li>
+                <li v-for="size in sizes">{{size}}</li><!-- размеры -->
             </ul>
-            <a :href="link">More products like this</a>
-
+            <div class="cart"> <!-- кол товаров в кор -->
+                <p>Cart({{ cart }})</p>
+            </div>
+            <button v-on:click="addToCart">Add to cart</button> <!-- добавить в кор -->
+            <button v-on:click="deleteToCart">Remove cart</button> <!-- убрать из кор -->
         </div>
     </div>
  </div>
