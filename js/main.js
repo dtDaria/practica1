@@ -1,6 +1,6 @@
 Vue.component('product-review', {
     template: `
-
+    
    <form class="review-form" @submit.prevent="onSubmit">
  <p>
    <label for="name">Name:</label>
@@ -27,13 +27,15 @@ Vue.component('product-review', {
    <input type="submit" value="Submit"> 
  </p>
 
+
+
 </form>
  `,
     data() {
         return {
             name: null,
             review: null,
-            rating: null
+            rating: null,
         }
     },
     methods:{
@@ -42,16 +44,13 @@ Vue.component('product-review', {
                 name: this.name,
                 review: this.review,
                 rating: this.rating,
-                reviews: []
+
             }
             this.$emit('review-submitted', productReview)
             this.name = null
             this.review = null
             this.rating = null
         },
-        addReview(productReview) {
-            this.reviews.push(productReview)
-        }
     }
 
 })
@@ -107,8 +106,21 @@ Vue.component('product', {
             <button v-on:click="addToCart" :disabled="!inStock"
                     :class="{ disabledButton: !inStock }">Add to cart</button><!-- добавить в кор -->
             <button v-on:click="removeCart">Remove Cart</button>
+            <div>
+            <h2>Reviews</h2>
+            <p v-if="!reviews.length">There are no reviews yet.</p>
+            <ul>
+                  <li v-for="review in reviews">
+                  <p>{{ review.name }}</p>
+                  <p>Rating: {{ review.rating }}</p>
+                  <p>{{ review.review }}</p>
+                  </li>
+            </ul>
+            </div>
+            <product-review @review-submitted="addReview"></product-review>
 
 
+                
         </div>
    </div>
  `,
@@ -123,7 +135,7 @@ Vue.component('product', {
             inventory: 100,
             onSale: true,
             details: ['80% cotton', '20% polyester', 'Gender-neutral'],
-
+            reviews: [],
             variants: [
                 {
                     variantId: 2234,
@@ -156,6 +168,11 @@ Vue.component('product', {
         updateProduct(index) {
             this.selectedVariant = index;
         },
+        addReview(productReview) {
+            this.reviews.push(productReview)
+        }
+
+
     },
     computed: {
         title() {
@@ -164,9 +181,10 @@ Vue.component('product', {
         image() {
             return this.variants[this.selectedVariant].variantImage;
         },
-        inStock(){
-            return this.variants[this.selectedVariant].variantQuantity;
+        inStock() {
+            return this.variants[this.selectedVariant].variantQuantity
         },
+
         sale(){
             return this.brand + '  ' + this.product + '  ' + this.variants[this.selectedVariant].variantOnSale;
         },
