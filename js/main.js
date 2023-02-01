@@ -2,6 +2,12 @@ Vue.component('product-review', {
     template: `
     
    <form class="review-form" @submit.prevent="onSubmit">
+   <p v-if="errors.length">
+    <b>Please correct the following error(s):</b>
+    <ul>
+        <li v-for="error in errors">{{ error }}</li>
+    </ul>
+</p>
  <p>
    <label for="name">Name:</label>
    <input id="name" v-model="name" placeholder="name">
@@ -22,13 +28,20 @@ Vue.component('product-review', {
      <option>1</option>
    </select>
  </p>
-
+ 
+ <p>Would you recommend this product?</p>
+  <div>
+    <input type="radio" id="question" name="question" v-model="question" value="Yes">
+    <label for="question">Yes</label>
+    <input type="radio" id="question" name="question" v-model="question" value="No">
+    <label for="question">No</label>
+  </div>
+  
+ 
+ 
  <p>
    <input type="submit" value="Submit"> 
  </p>
-
-
-
 </form>
  `,
     data() {
@@ -36,22 +49,34 @@ Vue.component('product-review', {
             name: null,
             review: null,
             rating: null,
+            question: null,
+            errors: [],
         }
     },
-    methods:{
-        onSubmit() {
+
+methods: {
+    onSubmit() {
+        if (this.name && this.review && this.rating && this.question) {
             let productReview = {
                 name: this.name,
                 review: this.review,
                 rating: this.rating,
-
+                question: this.question
             }
             this.$emit('review-submitted', productReview)
             this.name = null
             this.review = null
             this.rating = null
-        },
+            this.question = null
+        } else {
+            if (!this.name) this.errors.push("Name required.")
+            if (!this.review) this.errors.push("Review required.")
+            if (!this.rating) this.errors.push("Rating required.")
+            if (!this.question) this.errors.push("question required.")
+        }
+
     }
+}
 
 })
 
@@ -87,7 +112,7 @@ Vue.component('product', {
             <span v-if="onSale">{{sale}}</span> <!-- товар находится на скидке -->
             <span v-else>noSale</span> <!-- товар не находится на скидке -->
             <p v-if="inStock">In stock</p> <!-- товар нахдится в наличии -->
-            <p v-else :class="{outOfStock: !instock}">Out of stock</p>
+            <p v-else :class="{outOfStock: !inStock}">Out of stock</p>
             <ul>
                 <li v-for="detail in details">{{ detail }}</li> <!-- состав -->
             </ul>
@@ -114,6 +139,7 @@ Vue.component('product', {
                   <p>{{ review.name }}</p>
                   <p>Rating: {{ review.rating }}</p>
                   <p>{{ review.review }}</p>
+                  <p>{{ review.question}}</p>
                   </li>
             </ul>
             </div>
