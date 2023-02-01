@@ -1,3 +1,43 @@
+Vue.component('product-tabs', {
+    template: `
+     <div>   
+       <ul>
+         <span class="tab"
+               :class="{ activeTab: selectedTab === tab }"
+               v-for="(tab, index) in tabs"
+               @click="selectedTab = tab"
+         >{{ tab }}</span>
+       </ul>
+       <div>
+         <p v-if="!reviews.length">There are no reviews yet.</p>
+         <ul>
+           <li v-for="review in reviews">
+           <p>{{ review.name }}</p>
+           <p>Rating: {{ review.rating }}</p>
+           <p>{{ review.review }}</p>
+           </li>
+         </ul>
+       </div>
+     </div>
+     
+
+`,
+    props: {
+        reviews: {
+            type: Array,
+            required: false
+        }
+    },
+
+    data() {
+        return {
+            tabs: ['Reviews', 'Make a Review'],
+            selectedTab: 'Reviews'  // устанавливается с помощью @click
+        }
+    }
+})
+
+
 Vue.component('product-review', {
     template: `
     
@@ -31,13 +71,12 @@ Vue.component('product-review', {
  
  <p>Would you recommend this product?</p>
   <div>
+     <label for="question">Yes</label>
     <input type="radio" id="question" name="question" v-model="question" value="Yes">
-    <label for="question">Yes</label>
-    <input type="radio" id="question" name="question" v-model="question" value="No">
     <label for="question">No</label>
+    <input type="radio" id="question" name="question" v-model="question" value="No">
+    
   </div>
-  
- 
  
  <p>
    <input type="submit" value="Submit"> 
@@ -144,7 +183,7 @@ Vue.component('product', {
             </ul>
             </div>
             <product-review @review-submitted="addReview"></product-review>
-
+            <product-tabs :reviews="reviews"></product-tabs>
 
                 
         </div>
@@ -246,6 +285,8 @@ let app = new Vue({
 
 
 })
+
+
 
 
 
