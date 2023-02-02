@@ -115,6 +115,7 @@ Vue.component('product-review', {
 
 methods: {
     onSubmit() {
+        this.errors = []
         if (this.name && this.review && this.rating && this.question) {
             let productReview = {
                 name: this.name,
@@ -278,11 +279,7 @@ let app = new Vue({
             this.cart.push(id);
         },
         removeCart(id) {
-            for(let i = this.cart.length - 1; i >= 0; i--){
-                if(this.cart[i] === id){
-                    this.cart.splice(i,1)
-                }
-            }
+            this.cart.pop(); //Метод pop() удаляет последний элемент из массива и возвращает удалённое значение.
         }
     },
 
