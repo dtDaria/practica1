@@ -115,7 +115,7 @@ Vue.component('product-review', {
 
 methods: {
     onSubmit() {
-        this.errors = []
+        this.errors = [] // очищение при исправлении ошибки
         if (this.name && this.review && this.rating && this.question) {
             let productReview = {
                 name: this.name,
